@@ -2,7 +2,7 @@
 
 ### Dependencies
 
-Make sure the latest docker and docker-compose programs are installed in the host.
+Make sure the latest docker and docker-compose programs are installed on the host machine.
 - Docker: https://docs.docker.com/engine/install/
 - Docker Compose: https://docs.docker.com/compose/install/
 
