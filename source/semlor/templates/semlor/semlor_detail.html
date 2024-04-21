@@ -1,0 +1,78 @@
+{% extends 'semlor/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="title">{{ semlor }}</h1>
+</div>
+<div class="container mt-5">
+    <div class="row details-row">
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Bakery:</strong> {{ semlor.bakery.name }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Location:</strong> {{ semlor.bakery.city.name }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Vegan:</strong> {{ semlor.is_vegan }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Type:</strong> {{ semlor.semlor_type }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Price:</strong> {{ semlor.price }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Rating:</strong> {{ semlor.rating }} ({{ semlor.total_ratings }})
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+                {% if semlor.picture %}
+                    <img src="{{ semlor.picture.url }}" class="card-img-top" alt="{{ semlor }}">
+                {% else %}
+                    <img src="{% static 'assets/images/no-picture.jpg' %}" class="card-img-top" alt="{{ semlor }}">
+                {% endif %}
+        </div>
+    </div>
+
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h2>Add Rating</h2>
+        </div>
+        <div class="col-12">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in rating_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Ratings</h2>
+    <ul class="list-group">
+        {% for rating in semlor.ratings.all %}
+            <li class="list-group-item">
+                <strong>Rating:</strong> {{ rating.rating }} |
+                <strong>Created at:</strong> {{ rating.created_at }}
+                <div>{{ rating.comment }} </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No ratings yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

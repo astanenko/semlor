@@ -1,0 +1,90 @@
+:root {
+    --link-color: #1f67b5;
+    --bg-color: #ffffff;
+    --secondary-bg-color: #f8f9fa;
+    --text-color: #333333;
+}
+
+/* Dark mode */
+.dark-mode {
+    --link-color: #5e9fe6;
+    --bg-color: #333333;
+    --secondary-bg-color: #292929;
+    --text-color: #ffffff;
+}
+
+body {
+    font-weight: 400;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url(../fonts/Ubuntu-Regular.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Ubuntu';
+    src: url(../fonts/Ubuntu-Bold.ttf);
+    font-weight: 700;
+}
+h1,h2,h3,h4,h5,h6, a.nav-link, .btn {
+    color: var(--text-color);
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+}
+a {
+    color: var(--link-color)
+}
+.navbar, .card, footer {
+    background-color: var(--secondary-bg-color);
+}
+.btn {
+    background-color: var(--link-color);
+    color: #fff;
+}
+.top-semlors img, .all-semlors img {
+    object-fit: cover;
+}
+.top-semlors img {
+    height: 300px;
+}
+.all-semlors img {
+    height: 200px;
+}
+.list-group-item {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+}
+.form-control {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+}
+@media (max-width: 1199px) and (min-width: 992px) {
+    .top-semlors img {
+        height: 200px;
+    }
+    .all-semlors img {
+        height: 100px;
+    }
+}
+.details-row img {
+    max-height: 300px;
+}
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body-top {
+    align-self: flex-start;
+}
+
+.card-body-bottom {
+    align-self: flex-end;
+}
+.main-container {
+    margin-bottom: 100px;
+}

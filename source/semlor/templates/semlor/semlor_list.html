@@ -1,0 +1,60 @@
+{% extends 'semlor/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="title">Find the best Semlors here</h1>
+</div>
+<div class="container mt-4">
+    <h2>Top Semlors</h2>
+    <div class="row top-semlors">
+        {% for semlor in top_semlors %}
+        <div class="col-lg-4 mb-4 col-md-12">
+            <div class="card h-100 d-flex flex-column">
+                {% if semlor.picture %}
+                    <img src="{{ semlor.picture.url }}" class="card-img-top" alt="{{ semlor }}">
+                {% else %}
+                    <img src="{% static 'assets/images/no-picture.jpg' %}" class="card-img-top" alt="{{ semlor }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'semlor_detail' semlor.id %}">{{ semlor }}</a>
+                    </h5>
+                    <p class="card-text">Bakery: {{ semlor.bakery.name }}</p>
+                    <p class="card-text">Location: {{ semlor.bakery.city.name }}</p>
+                    <p class="card-text">Rating: {{ semlor.rating }} ({{ semlor.total_ratings }})</p>
+                    <a href="{% url 'semlor_detail' semlor.id %}" class="btn mt-auto">View and Rate</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <h2>Semlors</h2>
+    <div class="row all-semlors">
+        {% for semlor in other_semlors %}
+        <div class="col-lg-3 mb-4 col-md-6 col-sm-12">
+            <div class="card h-100 d-flex flex-column">
+                {% if semlor.picture %}
+                    <img src="{{ semlor.picture.url }}" class="card-img-top" alt="{{ semlor }}">
+                {% else %}
+                    <img src="{% static 'assets/images/no-picture.jpg' %}" class="card-img-top" alt="{{ semlor }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'semlor_detail' semlor.id %}">{{ semlor }}</a>
+                    </h5>
+                    <p class="card-text">Bakery: {{ semlor.bakery.name }}</p>
+                    <p class="card-text">Location: {{ semlor.bakery.city.name }}</p>
+                    <p class="card-text">Rating: {{ semlor.rating }} ({{ semlor.total_ratings }})</p>
+                    <a href="{% url 'semlor_detail' semlor.id %}" class="btn mt-auto">View and Rate</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

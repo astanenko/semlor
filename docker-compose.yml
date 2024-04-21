@@ -1,0 +1,37 @@
+services:
+  web:
+    image: app
+    container_name: semlor
+    build: .
+    volumes:
+      - staticfiles-volume:/usr/src/app/static
+      - mediafiles-volume:/usr/src/app/media
+    env_file:
+      - ./app.env
+      - ./db.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.3-alpine
+    container_name: semlor-db
+    env_file:
+      - ./db.env
+    volumes:
+      - semlor-db-data:/var/lib/postgresql/data
+
+  nginx:
+    build: ./nginx
+    container_name: semlor-nginx
+    ports:
+      - 80:80
+    volumes:
+      - staticfiles-volume:/usr/src/app/static
+      - mediafiles-volume:/usr/src/app/media
+    depends_on:
+      - web
+
+volumes:
+  semlor-db-data:
+  staticfiles-volume:
+  mediafiles-volume:
