@@ -7,6 +7,9 @@ migrate:
 collectstatic:
 	docker compose exec web python manage.py collectstatic --no-input --clear
 
+createsuperuser:
+	docker compose exec web python manage.py createsuperuser
+
 down:
 	docker compose down -v
 
