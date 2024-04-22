@@ -26,7 +26,7 @@ jobs:
 
       - name: Run Flake8 and Black
         run: |
-          flake8 source
+          flake8 --max-line-length 90 source
           black --check source
 
       - name: Run Tests
