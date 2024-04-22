@@ -15,8 +15,6 @@ services:
   db:
     image: postgres:15.3-alpine
     container_name: semlor-db
-    ports:
-      - 5432:5432
     env_file:
       - ./db.env
     volumes:

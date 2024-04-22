@@ -39,8 +39,10 @@ jobs:
       - name: Start Docker Compose
         run: docker-compose -f docker-compose.yml up -d --build
 
+      # Desperate times require desperate moves :) ToDo Fix it later
       - name: Run Tests
         run: |
+          sleep 10
           make test
 
       - name: Configure AWS credentials
