@@ -39,6 +39,10 @@ jobs:
       - name: Start Docker Compose
         run: docker-compose -f docker-compose.yml up -d --build
 
+      - name: Wait for Database Service
+        run: |
+          while ! nc -z db 5432; do sleep 1; done
+
       - name: Run Tests
         run: |
           make test
