@@ -34,12 +34,12 @@ jobs:
           flake8 --max-line-length 90 source
           black --check source
 
-#      - name: Start Docker Compose
-#        run: docker-compose -f path/to/docker-compose.yml up -d
-#
-#      - name: Run Tests
-#        run: |
-#          make test
+      - name: Start Docker Compose
+        run: docker-compose -f path/to/docker-compose.yml up -d
+
+      - name: Run Tests
+        run: |
+          make test
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
