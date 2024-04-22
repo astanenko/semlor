@@ -30,7 +30,10 @@ jobs:
           black --check source
 
       - name: Run Tests
-        run: python source/manage.py test semlor
+        run: |
+          export $(cat db.env | xargs)
+          export $(cat app.env | xargs)
+          python source/manage.py test semlor
 
       - name: Build App Docker Image
         run: |
