@@ -1,0 +1,103 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Flake8 and Black
+        run: |
+          flake8 --max-line-length 90 source
+          black --check source
+
+#      As I use integration tests it requires a full deployment to run the tests. Skipped for now
+#      - name: Run Tests
+#
+#        run: |
+#          export $(cat db.env | xargs)
+#          export $(cat app.env | xargs)
+#          python source/manage.py test semlor
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login
+        with:
+          registry: 058264290495.dkr.ecr.eu-central-1.amazonaws.com
+
+      - name: Build, tag, and push semlor image to Amazon ECR
+        id: build-image-semlor
+        env:
+          ECR_REGISTRY: 058264290495.dkr.ecr.eu-central-1.amazonaws.com
+          IMAGE_TAG: ${GITHUB_SHA::8}
+        run: |
+          docker build -t $ECR_REGISTRY/semlor:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def-semlor
+        uses: aws-actions/amazon-ecs-render-task-definition
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: semlor
+          image: ${{ steps.build-image-semlor.outputs.image }}
+
+      - name: Deploy semlor Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition
+        with:
+          task-definition: ${{ steps.task-def-semlor.outputs.task-definition }}
+          service: semlor-service
+          cluster: semlor-cluster
+          wait-for-service-stability: true
+
+      - name: Build, tag, and push semlor nginx image to Amazon ECR
+        id: build-image-semlor-nginx
+        env:
+          ECR_REGISTRY: 058264290495.dkr.ecr.eu-central-1.amazonaws.com
+          IMAGE_TAG: ${GITHUB_SHA::8}
+        run: |
+          docker build -t $ECR_REGISTRY/semlor-nginx:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def-semlor-nginx
+        uses: aws-actions/amazon-ecs-render-task-definition
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: semlor
+          image: ${{ steps.build-image-semlor-nginx.outputs.image }}
+
+      - name: Deploy semlor Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition
+        with:
+          task-definition: ${{ steps.task-def-semlor-nginx.outputs.task-definition }}
+          service: semlor-nginx-service
+          cluster: semlor-cluster
+          wait-for-service-stability: true
