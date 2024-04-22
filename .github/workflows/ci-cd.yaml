@@ -38,7 +38,7 @@ jobs:
 #          python source/manage.py test semlor
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -46,7 +46,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login
+        uses: aws-actions/amazon-ecr-login@v4
         with:
           registry: 058264290495.dkr.ecr.eu-central-1.amazonaws.com
 
@@ -62,14 +62,14 @@ jobs:
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def-semlor
-        uses: aws-actions/amazon-ecs-render-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v4
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: semlor
           image: ${{ steps.build-image-semlor.outputs.image }}
 
       - name: Deploy semlor Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v4
         with:
           task-definition: ${{ steps.task-def-semlor.outputs.task-definition }}
           service: semlor-service
@@ -88,14 +88,14 @@ jobs:
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def-semlor-nginx
-        uses: aws-actions/amazon-ecs-render-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v4
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: semlor
           image: ${{ steps.build-image-semlor-nginx.outputs.image }}
 
       - name: Deploy semlor Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v4
         with:
           task-definition: ${{ steps.task-def-semlor-nginx.outputs.task-definition }}
           service: semlor-nginx-service
