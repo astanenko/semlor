@@ -47,8 +47,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registry: 058264290495.dkr.ecr.eu-central-1.amazonaws.com
 
       - name: Build, tag, and push semlor image to Amazon ECR
         id: build-image-semlor
