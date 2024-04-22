@@ -69,7 +69,7 @@ jobs:
           image: ${{ steps.build-image-semlor.outputs.image }}
 
       - name: Deploy semlor Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def-semlor.outputs.task-definition }}
           service: semlor-service
@@ -95,7 +95,7 @@ jobs:
           image: ${{ steps.build-image-semlor-nginx.outputs.image }}
 
       - name: Deploy semlor Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def-semlor-nginx.outputs.task-definition }}
           service: semlor-nginx-service
