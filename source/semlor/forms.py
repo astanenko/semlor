@@ -34,9 +34,7 @@ class RatingForm(forms.ModelForm):
             >= 5
         ):
             raise ValidationError(
-                {
-                    "rating": "Max votes per day reached. Try again tomorrow"
-                }
+                {"rating": "Max votes per day reached. Try again tomorrow"}
             )
 
         return cleaned_data

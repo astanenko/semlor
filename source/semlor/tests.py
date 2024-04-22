@@ -30,9 +30,7 @@ class SemlorTests(TestCase):
         self.semlor.delete()
 
     def test_detail_view(self):
-        response = self.client.get(
-            reverse("semlor_detail", args=[self.semlor.id])
-        )
+        response = self.client.get(reverse("semlor_detail", args=[self.semlor.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.semlor_name)
         self.assertContains(response, "<strong>Rating:</strong> 0")
@@ -55,9 +53,7 @@ class SemlorTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Rating.objects.count(), rating_count_before + 1)
 
-        response = self.client.get(
-            reverse("semlor_detail", args=[self.semlor.id])
-        )
+        response = self.client.get(reverse("semlor_detail", args=[self.semlor.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<strong>Rating:</strong> 5")
 
@@ -67,26 +63,18 @@ class SemlorTests(TestCase):
         for i in range(1, 6):
             total += i
             data = {"rating": i, "comment": "Contradictory semlor!"}
-            response = self.client.post(
-                url, data, headers={"User-Agent": "Tests"}
-            )
+            response = self.client.post(url, data, headers={"User-Agent": "Tests"})
             self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(
-            reverse("semlor_detail", args=[self.semlor.id])
-        )
+        response = self.client.get(reverse("semlor_detail", args=[self.semlor.id]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(
-            response, f"<strong>Rating:</strong> {round(total / 5)}"
-        )
+        self.assertContains(response, f"<strong>Rating:</strong> {round(total / 5)}")
 
     def test_rating_limit(self):
         url = reverse("semlor_detail", args=[self.semlor.id])
         for _ in range(5):
             data = {"rating": 5, "comment": "Great semlor!"}
-            response = self.client.post(
-                url, data, headers={"User-Agent": "Tests"}
-            )
+            response = self.client.post(url, data, headers={"User-Agent": "Tests"})
             self.assertEqual(response.status_code, 302)
 
         rating_count_before = Rating.objects.count()
@@ -120,8 +108,7 @@ class SemlorTests(TestCase):
 
         # Add an invalid comment
         comment = "".join(
-            secrets.choice(string.ascii_letters + string.digits)
-            for _ in range(2000)
+            secrets.choice(string.ascii_letters + string.digits) for _ in range(2000)
         )
         invalid_data = {"rating": 5, "comment": comment}
         invalid_response = self.client.post(

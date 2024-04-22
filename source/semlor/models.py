@@ -46,9 +46,7 @@ class Semlor(models.Model):
 class Rating(models.Model):
     SEMLOR_RATINGS = [(i, str(i)) for i in range(1, 6)]
 
-    semlor = models.ForeignKey(
-        Semlor, on_delete=models.CASCADE, related_name="ratings"
-    )
+    semlor = models.ForeignKey(Semlor, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(choices=SEMLOR_RATINGS)
     comment = models.TextField(blank=True, max_length=1024)
     ip_address = models.GenericIPAddressField()
@@ -66,8 +64,6 @@ def update_semlor_rating(sender, instance, created, **kwargs):
         ratings = semlor.ratings.all()
         total_ratings = len(ratings)
         total_score = sum(rating.rating for rating in ratings)
-        semlor.rating = (
-            round(total_score / total_ratings) if total_ratings > 0 else 0
-        )
+        semlor.rating = round(total_score / total_ratings) if total_ratings > 0 else 0
         semlor.total_ratings = total_ratings
         semlor.save()
