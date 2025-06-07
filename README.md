@@ -1,5 +1,7 @@
 # Readme
 
+Is a test tasks for one of the interviews
+
 ### Dependencies
 
 Make sure the latest docker and docker-compose programs are installed on the host machine.
